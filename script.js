@@ -182,4 +182,3 @@ function filterCategories(text) {
 categorySearchInput.addEventListener("input", (e) => {
   filterCategories(e.target.value.trim());
 });
-
