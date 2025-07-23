@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Service Finder</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Service Finder</h1>
+    <p>Select a service category</p>
+  </header>
+
+  <main>
+    <div id="category-blocks" class="categories-container">
+      <div class="category-block" data-category="Electricians">⚡<br /><span>Electricians</span></div>
+      <div class="category-block" data-category="Plumbers">🚰<br /><span>Plumbers</span></div>
+      <div class="category-block" data-category="Painters">🎨<br /><span>Painters</span></div>
+      <div class="category-block" data-category="Mechanics">🛠️<br /><span>Mechanics</span></div>
+      <div class="category-block" data-category="Car Repair">🚗<br /><span>Car Repair</span></div>
+      <div class="category-block" data-category="Grocery Stores">🛒<br /><span>Grocery Stores</span></div>
+      <div class="category-block" data-category="Car Wash">🚿<br /><span>Car Wash</span></div>
+      <div class="category-block" data-category="Cleaning Services">🧹<br /><span>Cleaning Services</span></div>
+      <div class="category-block" data-category="Tutors">📚<br /><span>Tutors</span></div>
+      <div class="category-block" data-category="IT Support">💻<br /><span>IT Support</span></div>
+      <div class="category-block" data-category="Landscaping">🌳<br /><span>Landscaping</span></div>
+    </div>
+
+    <div class="back-container hidden">
+      <button id="back-btn">← Back to Categories</button>
+    </div>
+
+    <div id="search-container" class="hidden">
+      <input
+        type="text"
+        id="search-input"
+        placeholder="Search service providers..."
+        autocomplete="off"
+      />
+    </div>
+
+    <div id="service-list" class="service-list hidden"></div>
+  </main>
+
+  <script>
+    const services = [
+      { id: 1, name: "Spark Electric", category: "Electricians", price: 40, rating: 4.5, phone: "123-456-7890", email: "contact@sparkelectric.com", address: "123 Electric St" },
+      { id: 2, name: "Bright Sparks", category: "Electricians", price: 35, rating: 4.2, phone: "987-654-3210", email: "info@brightsparks.com", address: "456 Wire Ave" },
+      { id: 3, name: "Pipe Masters", category: "Plumbers", price: 50, rating: 4.6, phone: "555-234-5678", email: "support@pipemasters.com", address: "789 Water Rd" },
+      { id: 4, name: "Flush Experts", category: "Plumbers", price: 45, rating: 4.4, phone: "555-345-6789", email: "contact@flushexperts.com", address: "321 Drain Blvd" },
+      { id: 5, name: "Color Splash", category: "Painters", price: 30, rating: 4.7, phone: "555-456-7890", email: "hello@colorsplash.com", address: "654 Paint Ln" },
+      { id: 6, name: "Perfect Finish", category: "Painters", price: 28, rating: 4.3, phone: "555-567-8901", email: "info@perfectfinish.com", address: "987 Brush St" },
+      { id: 7, name: "AutoFix Garage", category: "Mechanics", price: 55, rating: 4.8, phone: "555-678-9012", email: "service@autofix.com", address: "234 Repair Rd" },
+      { id: 8, name: "Car Care Pros", category: "Car Repair", price: 60, rating: 4.5, phone: "555-789-0123", email: "contact@carcarepros.com", address: "567 Auto Blvd" },
+      { id: 9, name: "Fresh Mart", category: "Grocery Stores", price: 0, rating: 4.2, phone: "555-890-1234", email: "freshmart@grocery.com", address: "345 Market St" },
+      { id: 10, name: "Clean Sweep", category: "Cleaning Services", price: 40, rating: 4.6, phone: "555-901-2345", email: "info@cleansweep.com", address: "678 Clean Ave" },
+      { id: 11, name: "Tutor Time", category: "Tutors", price: 25, rating: 4.9, phone: "555-012-3456", email: "hello@tutortime.com", address: "890 Study Rd" },
+      { id: 12, name: "Tech Support Co", category: "IT Support", price: 50, rating: 4.4, phone: "555-123-4567", email: "support@techsupport.com", address: "123 Tech Blvd" },
+      { id: 13, name: "GreenScape", category: "Landscaping", price: 50, rating: 4.8, phone: "555-666-7777", email: "greenscape@landscaping.com", address: "89 Garden Blvd" },
+      { id: 14, name: "LawnPros", category: "Landscaping", price: 45, rating: 4.7, phone: "555-777-8888", email: "lawnpros@landscaping.com", address: "12 Lawn St" },
+      { id: 15, name: "Shiny Car Wash", category: "Car Wash", price: 20, rating: 4.5, phone: "555-222-3333", email: "contact@shinycarwash.com", address: "45 Clean St" }
+    ];
+
+    const categoryBlocksContainer = document.getElementById("category-blocks");
+    const categoriesContainer = document.querySelector(".categories-container");
+    const backBtnContainer = document.querySelector(".back-container");
+    const backBtn = document.getElementById("back-btn");
+    const serviceList = document.getElementById("service-list");
+    const searchContainer = document.getElementById("search-container");
+    const searchInput = document.getElementById("search-input");
+
+    let currentCategory = "";
+
+    function showServices(category, filterText = "") {
+      currentCategory = category;
+      serviceList.innerHTML = "";
+
+      const filteredServices = services.filter(
+        s =>
+          s.category === category &&
+          s.name.toLowerCase().includes(filterText.toLowerCase())
+      );
+
+      if (filteredServices.length === 0) {
+        serviceList.innerHTML = "<p>No service providers found.</p>";
+      } else {
+        filteredServices.forEach(service => {
+          const card = document.createElement("div");
+          card.classList.add("card");
+
+          // Link to details.html with service id param
+          card.innerHTML = `
+            <a href="details.html?id=${service.id}" class="service-link" style="text-decoration:none; color:inherit;">
+              <h3>${service.name}</h3>
+              <p><strong>Price:</strong> $${service.price}</p>
+              <p><strong>Rating:</strong> ${service.rating} ⭐</p>
+              <p><strong>Phone:</strong> ${service.phone}</p>
+              <p><strong>Email:</strong> ${service.email}</p>
+              <p><strong>Address:</strong> ${service.address}</p>
+            </a>
+          `;
+
+          serviceList.appendChild(card);
+        });
+      }
+
+      categoriesContainer.classList.add("hidden");
+      backBtnContainer.classList.remove("hidden");
+      serviceList.classList.remove("hidden");
+      searchContainer.classList.remove("hidden");
+      searchInput.value = "";
+      searchInput.focus();
+    }
+
+    categoryBlocksContainer.addEventListener("click", e => {
+      const block = e.target.closest(".category-block");
+      if (block) {
+        showServices(block.dataset.category);
+      }
+    });
+
+    backBtn.addEventListener("click", () => {
+      currentCategory = "";
+      serviceList.innerHTML = "";
+      categoriesContainer.classList.remove("hidden");
+      backBtnContainer.classList.add("hidden");
+      serviceList.classList.add("hidden");
+      searchContainer.classList.add("hidden");
+      searchInput.value = "";
+    });
+
+    searchInput.addEventListener("input", e => {
+      if (!currentCategory) return;
+      showServices(currentCategory, e.target.value.trim());
+    });
+  </script>
+</body>
+</html>

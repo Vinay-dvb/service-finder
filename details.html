@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Service Provider Details</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Service Provider Details</h1>
+  </header>
+
+  <main>
+    <div id="detail-container" style="max-width: 600px; margin: 0 auto;"></div>
+    <div style="text-align:center; margin-top: 1.5rem;">
+      <button id="back-btn" style="
+        background-color: #0a74da; 
+        color: white; 
+        padding: 0.75rem 1.5rem; 
+        border: none; 
+        border-radius: 25px; 
+        cursor: pointer;
+        font-weight: 600;
+        box-shadow: 0 5px 12px rgba(10, 116, 218, 0.5);
+      ">← Back to Services</button>
+    </div>
+  </main>
+
+  <script>
+    const services = [
+      { id: 1, name: "Spark Electric", category: "Electricians", price: 40, rating: 4.5, phone: "123-456-7890", email: "contact@sparkelectric.com", address: "123 Electric St" },
+      { id: 2, name: "Bright Sparks", category: "Electricians", price: 35, rating: 4.2, phone: "987-654-3210", email: "info@brightsparks.com", address: "456 Wire Ave" },
+      { id: 3, name: "Pipe Masters", category: "Plumbers", price: 50, rating: 4.6, phone: "555-234-5678", email: "support@pipemasters.com", address: "789 Water Rd" },
+      { id: 4, name: "Flush Experts", category: "Plumbers", price: 45, rating: 4.4, phone: "555-345-6789", email: "contact@flushexperts.com", address: "321 Drain Blvd" },
+      { id: 5, name: "Color Splash", category: "Painters", price: 30, rating: 4.7, phone: "555-456-7890", email: "hello@colorsplash.com", address: "654 Paint Ln" },
+      { id: 6, name: "Perfect Finish", category: "Painters", price: 28, rating: 4.3, phone: "555-567-8901", email: "info@perfectfinish.com", address: "987 Brush St" },
+      { id: 7, name: "AutoFix Garage", category: "Mechanics", price: 55, rating: 4.8, phone: "555-678-9012", email: "service@autofix.com", address: "234 Repair Rd" },
+      { id: 8, name: "Car Care Pros", category: "Car Repair", price: 60, rating: 4.5, phone: "555-789-0123", email: "contact@carcarepros.com", address: "567 Auto Blvd" },
+      { id: 9, name: "Fresh Mart", category: "Grocery Stores", price: 0, rating: 4.2, phone: "555-890-1234", email: "freshmart@grocery.com", address: "345 Market St" },
+      { id: 10, name: "Clean Sweep", category: "Cleaning Services", price: 40, rating: 4.6, phone: "555-901-2345", email: "info@cleansweep.com", address: "678 Clean Ave" },
+      { id: 11, name: "Tutor Time", category: "Tutors", price: 25, rating: 4.9, phone: "555-012-3456", email: "hello@tutortime.com", address: "890 Study Rd" },
+      { id: 12, name: "Tech Support Co", category: "IT Support", price: 50, rating: 4.4, phone: "555-123-4567", email: "support@techsupport.com", address: "123 Tech Blvd" },
+      { id: 13, name: "GreenScape", category: "Landscaping", price: 50, rating: 4.8, phone: "555-666-7777", email: "greenscape@landscaping.com", address: "89 Garden Blvd" },
+      { id: 14, name: "LawnPros", category: "Landscaping", price: 45, rating: 4.7, phone: "555-777-8888", email: "lawnpros@landscaping.com", address: "12 Lawn St" },
+      { id: 15, name: "Shiny Car Wash", category: "Car Wash", price: 20, rating: 4.5, phone: "555-222-3333", email: "contact@shinycarwash.com", address: "45 Clean St" }
+    ];
+
+    function getServiceIdFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return Number(params.get("id"));
+    }
+
+    function showDetails(serviceId) {
+      const service = services.find(s => s.id === serviceId);
+      const container = document.getElementById("detail-container");
+
+      if (!service) {
+        container.innerHTML = "<p>Service provider not found.</p>";
+        return;
+      }
+
+      container.innerHTML = `
+        <h2>${service.name}</h2>
+        <p><strong>Category:</strong> ${service.category}</p>
+        <p><strong>Price:</strong> $${service.price}</p>
+        <p><strong>Rating:</strong> ${service.rating} ⭐</p>
+        <p><strong>Phone:</strong> <a href="tel:${service.phone}">${service.phone}</a></p>
+        <p><strong>Email:</strong> <a href="mailto:${service.email}">${service.email}</a></p>
+        <p><strong>Address:</strong> ${service.address}</p>
+      `;
+    }
+
+    document.getElementById("back-btn").addEventListener("click", () => {
+      window.history.back();
+    });
+
+    const id = getServiceIdFromUrl();
+    showDetails(id);
+  </script>
+</body>
+</html>
