@@ -3,29 +3,79 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Service Provider Details</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Service Details</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f3f4f6;
+      margin: 0;
+      color: #222;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 0 1rem 2rem;
+    }
+    header {
+      background-color: #0a74da;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      border-radius: 0 0 15px 15px;
+      box-shadow: 0 5px 12px rgba(10, 116, 218, 0.5);
+      width: 100%;
+      max-width: 960px;
+    }
+    h1 {
+      margin: 0;
+    }
+    main {
+      width: 100%;
+      max-width: 600px;
+      background: white;
+      margin: 2rem auto;
+      border-radius: 15px;
+      padding: 1.5rem;
+      box-shadow: 0 5px 15px rgba(10, 116, 218, 0.15);
+    }
+    .service-name {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      color: #0a74da;
+    }
+    .service-details p {
+      margin: 0.5rem 0;
+      font-size: 1.1rem;
+    }
+    .back-container {
+      text-align: center;
+      margin-top: 1rem;
+    }
+    .back-container button {
+      background-color: #0a74da;
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      box-shadow: 0 5px 12px rgba(10, 116, 218, 0.5);
+    }
+    .back-container button:hover {
+      background-color: #065a9d;
+    }
+  </style>
 </head>
 <body>
   <header>
-    <h1>Service Provider Details</h1>
+    <h1>Service Details</h1>
   </header>
-
-  <main>
-    <div id="detail-container" style="max-width: 600px; margin: 0 auto;"></div>
-    <div style="text-align:center; margin-top: 1.5rem;">
-      <button id="back-btn" style="
-        background-color: #0a74da; 
-        color: white; 
-        padding: 0.75rem 1.5rem; 
-        border: none; 
-        border-radius: 25px; 
-        cursor: pointer;
-        font-weight: 600;
-        box-shadow: 0 5px 12px rgba(10, 116, 218, 0.5);
-      ">← Back to Services</button>
-    </div>
+  <main id="service-container">
+    <!-- Service info will be loaded here -->
   </main>
+  <div class="back-container">
+    <button id="back-btn">← Back to Directory</button>
+  </div>
 
   <script>
     const services = [
@@ -46,37 +96,46 @@
       { id: 15, name: "Shiny Car Wash", category: "Car Wash", price: 20, rating: 4.5, phone: "555-222-3333", email: "contact@shinycarwash.com", address: "45 Clean St" }
     ];
 
-    function getServiceIdFromUrl() {
-      const params = new URLSearchParams(window.location.search);
-      return Number(params.get("id"));
+    // Helper: get query param by name
+    function getQueryParam(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
     }
 
-    function showDetails(serviceId) {
-      const service = services.find(s => s.id === serviceId);
-      const container = document.getElementById("detail-container");
+    const serviceContainer = document.getElementById("service-container");
+    const backBtn = document.getElementById("back-btn");
 
+    function showServiceDetails(id) {
+      const service = services.find(s => s.id === Number(id));
       if (!service) {
-        container.innerHTML = "<p>Service provider not found.</p>";
+        serviceContainer.innerHTML = "<p>Service not found.</p>";
         return;
       }
 
-      container.innerHTML = `
-        <h2>${service.name}</h2>
-        <p><strong>Category:</strong> ${service.category}</p>
-        <p><strong>Price:</strong> $${service.price}</p>
-        <p><strong>Rating:</strong> ${service.rating} ⭐</p>
-        <p><strong>Phone:</strong> <a href="tel:${service.phone}">${service.phone}</a></p>
-        <p><strong>Email:</strong> <a href="mailto:${service.email}">${service.email}</a></p>
-        <p><strong>Address:</strong> ${service.address}</p>
+      serviceContainer.innerHTML = `
+        <h2 class="service-name">${service.name}</h2>
+        <div class="service-details">
+          <p><strong>Category:</strong> ${service.category}</p>
+          <p><strong>Price:</strong> $${service.price}</p>
+          <p><strong>Rating:</strong> ${service.rating} ⭐</p>
+          <p><strong>Phone:</strong> <a href="tel:${service.phone}">${service.phone}</a></p>
+          <p><strong>Email:</strong> <a href="mailto:${service.email}">${service.email}</a></p>
+          <p><strong>Address:</strong> ${service.address}</p>
+        </div>
       `;
     }
 
-    document.getElementById("back-btn").addEventListener("click", () => {
-      window.history.back();
+    backBtn.addEventListener("click", () => {
+      window.location.href = "index.html";
     });
 
-    const id = getServiceIdFromUrl();
-    showDetails(id);
+    // On load
+    const serviceId = getQueryParam("id");
+    if (serviceId) {
+      showServiceDetails(serviceId);
+    } else {
+      serviceContainer.innerHTML = "<p>No service selected.</p>";
+    }
   </script>
 </body>
 </html>
