@@ -3,43 +3,156 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Service Finder</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Service Directory</title>
+  <style>
+    /* Your CSS from before, but trimmed for brevity */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f3f4f6;
+      margin: 0;
+      color: #222;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 0 1rem 2rem;
+    }
+    header {
+      background-color: #0a74da;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      border-radius: 0 0 15px 15px;
+      box-shadow: 0 5px 12px rgba(10, 116, 218, 0.5);
+      width: 100%;
+      max-width: 960px;
+    }
+    h1 {
+      margin: 0;
+    }
+    main {
+      width: 100%;
+      max-width: 960px;
+      padding: 1rem;
+    }
+    #category-search-container, #search-container {
+      max-width: 600px;
+      margin: 0 auto 1.5rem auto;
+    }
+    #category-search-input, #search-input {
+      width: 100%;
+      padding: 0.75rem 1.2rem;
+      font-size: 1.15rem;
+      border: 1px solid #ccc;
+      border-radius: 25px;
+      box-sizing: border-box;
+      outline-offset: 4px;
+      transition: box-shadow 0.3s ease, transform 0.15s ease;
+    }
+    #category-search-input:focus, #search-input:focus {
+      box-shadow: 0 6px 15px #48cae4;
+      transform: scale(1.02);
+      outline: none;
+    }
+    .categories-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 1rem;
+    }
+    .category-block {
+      background-color: white;
+      padding: 20px 25px;
+      border-radius: 20px;
+      width: 130px;
+      height: 130px;
+      box-shadow: 0 3px 7px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.25s ease;
+      font-size: 1.8rem;
+      text-align: center;
+      color: #0a74da;
+      text-shadow: 0 0 3px rgba(10,116,218,0.3);
+    }
+    .category-block:hover {
+      background-color: #0a74da;
+      color: white;
+    }
+    .category-block span {
+      margin-top: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    .hidden {
+      display: none;
+    }
+    .service-list {
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .card {
+      background-color: white;
+      border-radius: 15px;
+      padding: 1rem 1.5rem;
+      box-shadow: 0 5px 15px rgba(10, 116, 218, 0.15);
+      cursor: pointer;
+      transition: box-shadow 0.3s ease;
+    }
+    .card:hover {
+      box-shadow: 0 8px 20px rgba(10, 116, 218, 0.3);
+    }
+    .back-container {
+      margin-top: 1rem;
+      text-align: center;
+    }
+    .back-container button {
+      background-color: #0a74da;
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      box-shadow: 0 5px 12px rgba(10, 116, 218, 0.5);
+    }
+    .back-container button:hover {
+      background-color: #065a9d;
+    }
+  </style>
 </head>
 <body>
   <header>
-    <h1>Service Finder</h1>
-    <p>Select a service category</p>
+    <h1>Service Directory</h1>
+    <p>Find trusted local service providers</p>
   </header>
-
   <main>
-    <div id="category-blocks" class="categories-container">
-      <div class="category-block" data-category="Electricians">⚡<br /><span>Electricians</span></div>
-      <div class="category-block" data-category="Plumbers">🚰<br /><span>Plumbers</span></div>
-      <div class="category-block" data-category="Painters">🎨<br /><span>Painters</span></div>
-      <div class="category-block" data-category="Mechanics">🛠️<br /><span>Mechanics</span></div>
-      <div class="category-block" data-category="Car Repair">🚗<br /><span>Car Repair</span></div>
-      <div class="category-block" data-category="Grocery Stores">🛒<br /><span>Grocery Stores</span></div>
-      <div class="category-block" data-category="Car Wash">🚿<br /><span>Car Wash</span></div>
-      <div class="category-block" data-category="Cleaning Services">🧹<br /><span>Cleaning Services</span></div>
-      <div class="category-block" data-category="Tutors">📚<br /><span>Tutors</span></div>
-      <div class="category-block" data-category="IT Support">💻<br /><span>IT Support</span></div>
-      <div class="category-block" data-category="Landscaping">🌳<br /><span>Landscaping</span></div>
+    <!-- Category Search -->
+    <div id="category-search-container">
+      <input type="text" id="category-search-input" placeholder="Search categories..." />
     </div>
 
-    <div class="back-container hidden">
+    <!-- Categories -->
+    <div class="categories-container" id="category-blocks"></div>
+
+    <!-- Back button -->
+    <div class="back-container hidden" id="back-container">
       <button id="back-btn">← Back to Categories</button>
     </div>
 
+    <!-- Service Search -->
     <div id="search-container" class="hidden">
-      <input
-        type="text"
-        id="search-input"
-        placeholder="Search service providers..."
-        autocomplete="off"
-      />
+      <input type="text" id="search-input" placeholder="Search services..." />
     </div>
 
+    <!-- Service List -->
     <div id="service-list" class="service-list hidden"></div>
   </main>
 
@@ -63,23 +176,70 @@
     ];
 
     const categoryBlocksContainer = document.getElementById("category-blocks");
-    const categoriesContainer = document.querySelector(".categories-container");
-    const backBtnContainer = document.querySelector(".back-container");
+    const categoriesContainer = categoryBlocksContainer; // same container here
+    const backBtnContainer = document.getElementById("back-container");
     const backBtn = document.getElementById("back-btn");
     const serviceList = document.getElementById("service-list");
     const searchContainer = document.getElementById("search-container");
     const searchInput = document.getElementById("search-input");
+    const categorySearchInput = document.getElementById("category-search-input");
 
     let currentCategory = "";
 
+    // Get unique categories with an icon or emoji (for demo)
+    function getUniqueCategories() {
+      const uniqueCategories = [...new Set(services.map(s => s.category))];
+      return uniqueCategories.map(category => {
+        // For fun, assign an emoji icon by category (optional)
+        let icon = "🛠️";
+        if (category.toLowerCase().includes("electric")) icon = "💡";
+        else if (category.toLowerCase().includes("plumber")) icon = "🚰";
+        else if (category.toLowerCase().includes("paint")) icon = "🎨";
+        else if (category.toLowerCase().includes("mechanic")) icon = "🔧";
+        else if (category.toLowerCase().includes("car")) icon = "🚗";
+        else if (category.toLowerCase().includes("grocery")) icon = "🛒";
+        else if (category.toLowerCase().includes("clean")) icon = "🧹";
+        else if (category.toLowerCase().includes("tutor")) icon = "📚";
+        else if (category.toLowerCase().includes("landscape")) icon = "🌳";
+        else if (category.toLowerCase().includes("wash")) icon = "🚿";
+        return { category, icon };
+      });
+    }
+
+    // Show categories
+    function showCategories(filterText = "") {
+      categoryBlocksContainer.innerHTML = "";
+      const categories = getUniqueCategories().filter(c =>
+        c.category.toLowerCase().includes(filterText.toLowerCase())
+      );
+
+      if (categories.length === 0) {
+        categoryBlocksContainer.innerHTML = "<p>No categories found.</p>";
+        return;
+      }
+
+      categories.forEach(({ category, icon }) => {
+        const block = document.createElement("div");
+        block.classList.add("category-block");
+        block.dataset.category = category;
+        block.innerHTML = `<div>${icon}</div><span>${category}</span>`;
+        categoryBlocksContainer.appendChild(block);
+      });
+
+      categoriesContainer.classList.remove("hidden");
+      backBtnContainer.classList.add("hidden");
+      serviceList.classList.add("hidden");
+      searchContainer.classList.add("hidden");
+    }
+
+    // Show services for a category and filter by name
     function showServices(category, filterText = "") {
       currentCategory = category;
       serviceList.innerHTML = "";
 
       const filteredServices = services.filter(
-        s =>
-          s.category === category &&
-          s.name.toLowerCase().includes(filterText.toLowerCase())
+        s => s.category === category &&
+        s.name.toLowerCase().includes(filterText.toLowerCase())
       );
 
       if (filteredServices.length === 0) {
@@ -88,18 +248,21 @@
         filteredServices.forEach(service => {
           const card = document.createElement("div");
           card.classList.add("card");
+          card.setAttribute("data-id", service.id);
 
-          // Link to details.html with service id param
           card.innerHTML = `
-            <a href="details.html?id=${service.id}" class="service-link" style="text-decoration:none; color:inherit;">
-              <h3>${service.name}</h3>
-              <p><strong>Price:</strong> $${service.price}</p>
-              <p><strong>Rating:</strong> ${service.rating} ⭐</p>
-              <p><strong>Phone:</strong> ${service.phone}</p>
-              <p><strong>Email:</strong> ${service.email}</p>
-              <p><strong>Address:</strong> ${service.address}</p>
-            </a>
+            <h3>${service.name}</h3>
+            <p><strong>Price:</strong> $${service.price}</p>
+            <p><strong>Rating:</strong> ${service.rating} ⭐</p>
+            <p><strong>Phone:</strong> ${service.phone}</p>
+            <p><strong>Email:</strong> ${service.email}</p>
+            <p><strong>Address:</strong> ${service.address}</p>
           `;
+
+          // Navigate to details page on click
+          card.addEventListener("click", () => {
+            window.location.href = `details.html?id=${service.id}`;
+          });
 
           serviceList.appendChild(card);
         });
@@ -113,165 +276,37 @@
       searchInput.focus();
     }
 
-    categoryBlocksContainer.addEventListener("click", e => {
-      const block = e.target.closest(".category-block");
-      if (block) {
-        showServices(block.dataset.category);
+    // Event: click category
+    categoryBlocksContainer.addEventListener("click", (e) => {
+      let target = e.target;
+      while (target && !target.classList.contains("category-block")) {
+        target = target.parentElement;
+      }
+      if (target) {
+        const category = target.dataset.category;
+        if (category) {
+          showServices(category);
+        }
       }
     });
 
+    // Event: back button click
     backBtn.addEventListener("click", () => {
-      currentCategory = "";
-      serviceList.innerHTML = "";
-      categoriesContainer.classList.remove("hidden");
-      backBtnContainer.classList.add("hidden");
-      serviceList.classList.add("hidden");
-      searchContainer.classList.add("hidden");
-      searchInput.value = "";
+      showCategories(categorySearchInput.value);
     });
 
-    searchInput.addEventListener("input", e => {
-      if (!currentCategory) return;
-      showServices(currentCategory, e.target.value.trim());
-    });
-  </script>
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Service Finder</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <header>
-    <h1>Service Finder</h1>
-    <p>Select a service category</p>
-  </header>
-
-  <main>
-    <div id="category-blocks" class="categories-container">
-      <div class="category-block" data-category="Electricians">⚡<br /><span>Electricians</span></div>
-      <div class="category-block" data-category="Plumbers">🚰<br /><span>Plumbers</span></div>
-      <div class="category-block" data-category="Painters">🎨<br /><span>Painters</span></div>
-      <div class="category-block" data-category="Mechanics">🛠️<br /><span>Mechanics</span></div>
-      <div class="category-block" data-category="Car Repair">🚗<br /><span>Car Repair</span></div>
-      <div class="category-block" data-category="Grocery Stores">🛒<br /><span>Grocery Stores</span></div>
-      <div class="category-block" data-category="Car Wash">🚿<br /><span>Car Wash</span></div>
-      <div class="category-block" data-category="Cleaning Services">🧹<br /><span>Cleaning Services</span></div>
-      <div class="category-block" data-category="Tutors">📚<br /><span>Tutors</span></div>
-      <div class="category-block" data-category="IT Support">💻<br /><span>IT Support</span></div>
-      <div class="category-block" data-category="Landscaping">🌳<br /><span>Landscaping</span></div>
-    </div>
-
-    <div class="back-container hidden">
-      <button id="back-btn">← Back to Categories</button>
-    </div>
-
-    <div id="search-container" class="hidden">
-      <input
-        type="text"
-        id="search-input"
-        placeholder="Search service providers..."
-        autocomplete="off"
-      />
-    </div>
-
-    <div id="service-list" class="service-list hidden"></div>
-  </main>
-
-  <script>
-    const services = [
-      { id: 1, name: "Spark Electric", category: "Electricians", price: 40, rating: 4.5, phone: "123-456-7890", email: "contact@sparkelectric.com", address: "123 Electric St" },
-      { id: 2, name: "Bright Sparks", category: "Electricians", price: 35, rating: 4.2, phone: "987-654-3210", email: "info@brightsparks.com", address: "456 Wire Ave" },
-      { id: 3, name: "Pipe Masters", category: "Plumbers", price: 50, rating: 4.6, phone: "555-234-5678", email: "support@pipemasters.com", address: "789 Water Rd" },
-      { id: 4, name: "Flush Experts", category: "Plumbers", price: 45, rating: 4.4, phone: "555-345-6789", email: "contact@flushexperts.com", address: "321 Drain Blvd" },
-      { id: 5, name: "Color Splash", category: "Painters", price: 30, rating: 4.7, phone: "555-456-7890", email: "hello@colorsplash.com", address: "654 Paint Ln" },
-      { id: 6, name: "Perfect Finish", category: "Painters", price: 28, rating: 4.3, phone: "555-567-8901", email: "info@perfectfinish.com", address: "987 Brush St" },
-      { id: 7, name: "AutoFix Garage", category: "Mechanics", price: 55, rating: 4.8, phone: "555-678-9012", email: "service@autofix.com", address: "234 Repair Rd" },
-      { id: 8, name: "Car Care Pros", category: "Car Repair", price: 60, rating: 4.5, phone: "555-789-0123", email: "contact@carcarepros.com", address: "567 Auto Blvd" },
-      { id: 9, name: "Fresh Mart", category: "Grocery Stores", price: 0, rating: 4.2, phone: "555-890-1234", email: "freshmart@grocery.com", address: "345 Market St" },
-      { id: 10, name: "Clean Sweep", category: "Cleaning Services", price: 40, rating: 4.6, phone: "555-901-2345", email: "info@cleansweep.com", address: "678 Clean Ave" },
-      { id: 11, name: "Tutor Time", category: "Tutors", price: 25, rating: 4.9, phone: "555-012-3456", email: "hello@tutortime.com", address: "890 Study Rd" },
-      { id: 12, name: "Tech Support Co", category: "IT Support", price: 50, rating: 4.4, phone: "555-123-4567", email: "support@techsupport.com", address: "123 Tech Blvd" },
-      { id: 13, name: "GreenScape", category: "Landscaping", price: 50, rating: 4.8, phone: "555-666-7777", email: "greenscape@landscaping.com", address: "89 Garden Blvd" },
-      { id: 14, name: "LawnPros", category: "Landscaping", price: 45, rating: 4.7, phone: "555-777-8888", email: "lawnpros@landscaping.com", address: "12 Lawn St" },
-      { id: 15, name: "Shiny Car Wash", category: "Car Wash", price: 20, rating: 4.5, phone: "555-222-3333", email: "contact@shinycarwash.com", address: "45 Clean St" }
-    ];
-
-    const categoryBlocksContainer = document.getElementById("category-blocks");
-    const categoriesContainer = document.querySelector(".categories-container");
-    const backBtnContainer = document.querySelector(".back-container");
-    const backBtn = document.getElementById("back-btn");
-    const serviceList = document.getElementById("service-list");
-    const searchContainer = document.getElementById("search-container");
-    const searchInput = document.getElementById("search-input");
-
-    let currentCategory = "";
-
-    function showServices(category, filterText = "") {
-      currentCategory = category;
-      serviceList.innerHTML = "";
-
-      const filteredServices = services.filter(
-        s =>
-          s.category === category &&
-          s.name.toLowerCase().includes(filterText.toLowerCase())
-      );
-
-      if (filteredServices.length === 0) {
-        serviceList.innerHTML = "<p>No service providers found.</p>";
-      } else {
-        filteredServices.forEach(service => {
-          const card = document.createElement("div");
-          card.classList.add("card");
-
-          // Link to details.html with service id param
-          card.innerHTML = `
-            <a href="details.html?id=${service.id}" class="service-link" style="text-decoration:none; color:inherit;">
-              <h3>${service.name}</h3>
-              <p><strong>Price:</strong> $${service.price}</p>
-              <p><strong>Rating:</strong> ${service.rating} ⭐</p>
-              <p><strong>Phone:</strong> ${service.phone}</p>
-              <p><strong>Email:</strong> ${service.email}</p>
-              <p><strong>Address:</strong> ${service.address}</p>
-            </a>
-          `;
-
-          serviceList.appendChild(card);
-        });
-      }
-
-      categoriesContainer.classList.add("hidden");
-      backBtnContainer.classList.remove("hidden");
-      serviceList.classList.remove("hidden");
-      searchContainer.classList.remove("hidden");
-      searchInput.value = "";
-      searchInput.focus();
-    }
-
-    categoryBlocksContainer.addEventListener("click", e => {
-      const block = e.target.closest(".category-block");
-      if (block) {
-        showServices(block.dataset.category);
-      }
+    // Event: category search input
+    categorySearchInput.addEventListener("input", (e) => {
+      showCategories(e.target.value);
     });
 
-    backBtn.addEventListener("click", () => {
-      currentCategory = "";
-      serviceList.innerHTML = "";
-      categoriesContainer.classList.remove("hidden");
-      backBtnContainer.classList.add("hidden");
-      serviceList.classList.add("hidden");
-      searchContainer.classList.add("hidden");
-      searchInput.value = "";
+    // Event: service search input
+    searchInput.addEventListener("input", (e) => {
+      showServices(currentCategory, e.target.value);
     });
 
-    searchInput.addEventListener("input", e => {
-      if (!currentCategory) return;
-      showServices(currentCategory, e.target.value.trim());
-    });
+    // Initial load: show categories
+    showCategories();
   </script>
 </body>
 </html>
